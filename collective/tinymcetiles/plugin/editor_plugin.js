@@ -15,17 +15,34 @@
             // Register commands
             ed.addCommand('mcePloneTiles', function() {
                 // Internal image object like a flash placeholder
-                if (ed.dom.getAttrib(ed.selection.getNode(), 'class').indexOf('mceItem') != -1)
-                    return;
+                if ((ed.dom.getAttrib(ed.selection.getNode(), 'class').indexOf('mceItem') != -1) &&
+                    (ed.dom.getAttrib(ed.selection.getNode(), 'class').indexOf('mceTile') != -1)) {
 
-                ed.windowManager.open({
-                    file : ed.settings.document_base_url + '/@@add-tile',
-                    width : 820,
-                    height : 480,
-                    inline : 1
-                }, {
-                    plugin_url : url
-                });
+                    // Get url
+                    var url = ed.dom.getAttrib(ed.selection.getNode(), 'alt');
+                    url = url.replace(/@@/, '@@edit-tile/');
+
+                    // Open add tile menu
+                    ed.windowManager.open({
+                        file : url,
+                        width : 820,
+                        height : 480,
+                        inline : 1
+                    }, {
+                        plugin_url : url
+                    });
+                } else {
+
+                    // Open add tile menu
+                    ed.windowManager.open({
+                        file : ed.settings.document_base_url + '/@@add-tile',
+                        width : 820,
+                        height : 480,
+                        inline : 1
+                    }, {
+                        plugin_url : url
+                    });
+                }
             });
 
             // Register buttons

@@ -26,7 +26,7 @@
                     editor.execCommand('mceInsertContent', false, editor.dom.createHTML('img', {
                         src : '/++resource++collective.tinymcetiles.plugin/placeholder.gif',
                         alt : tiledata.url,
-                        class : 'mceIcon',
+                        class : 'mceItem mceTile',
                         border : 0
                     }));
 
