@@ -19,7 +19,7 @@
                     return;
 
                 ed.windowManager.open({
-                    file : ed.settings.document_base_url + '/@@available-tiles',
+                    file : ed.settings.document_base_url + '/@@add-tile',
                     width : 820,
                     height : 480,
                     inline : 1
