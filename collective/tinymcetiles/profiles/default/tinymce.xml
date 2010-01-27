@@ -2,12 +2,12 @@
 <object>
  <resourcetypes>
   <customplugins purge="False">
-   <element value="plonetiles"/>
+   <element value="plonetiles|/++resource++collective.tinymcetiles.plugin/editor_plugin.js"/>
   </customplugins>
  </resourcetypes>
  <toolbar>
   <customtoolbarbuttons purge="False">
-   <element value="plonetiles|/++resource++collective.tinymcetiles.plugin/editor_plugin.js"/>
+   <element value="plonetiles"/>
   </customtoolbarbuttons>
  </toolbar>
 </object>

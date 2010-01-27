@@ -3,7 +3,9 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     xmlns:browser="http://namespaces.zope.org/browser"
     i18n_domain="collective.tinymcetiles">
-
+    
+    <include package="plone.app.tiles" />
+    
     <browser:resourceDirectory
         name="collective.tinymcetiles.plugin"
         directory="plugin"
