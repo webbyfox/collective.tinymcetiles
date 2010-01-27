@@ -6,6 +6,13 @@
     
     <include package="plone.app.tiles" />
     
+    <!-- Transformation - order 8050 is in the plone.app.blocks 8000 sequence after XML parsing -->
+    <adapter
+        for="* .interfaces.ITinyMCETilesLayer"
+        name="collective.tinymcetiles.interpolate"
+        factory=".transform.InterpolateTiles"
+        />
+    
     <browser:resourceDirectory
         name="collective.tinymcetiles.plugin"
         directory="plugin"

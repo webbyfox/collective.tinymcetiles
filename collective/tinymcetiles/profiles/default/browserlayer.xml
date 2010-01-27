@@ -1,0 +1,6 @@
+<layers>
+    <layer
+        name="collective.tinymcetiles"
+        interface="collective.tinymcetiles.interfaces.ITinyMCETilesLayer"
+        />
+</layers>

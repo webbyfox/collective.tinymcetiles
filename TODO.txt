@@ -1,0 +1,8 @@
+collective.tinymcetiles ToDo
+=============================
+
+* template-only tiles do not render properly (NotFound on tile id)
+* Clean up tile data upon removal
+
+* Write tests
+* Releases

@@ -24,6 +24,8 @@ setup(name='collective.tinymcetiles',
       install_requires=[
           'setuptools',
           'plone.app.tiles',
+          'plone.app.blocks',
+          'Products.TinyMCE',
       ],
       entry_points="""
       [z3c.autoinclude.plugin]
