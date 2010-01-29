@@ -6,7 +6,7 @@
     
     <include package="plone.app.tiles" />
     
-    <!-- Transformation - order 8050 is in the plone.app.blocks 8000 sequence after XML parsing -->
+    <!-- Transformation - order 8950, which is late in the XML processing cycle that runs from 8000 -->
     <adapter
         for="* .interfaces.ITinyMCETilesLayer"
         name="collective.tinymcetiles.interpolate"
