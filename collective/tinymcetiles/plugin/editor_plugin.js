@@ -21,7 +21,8 @@
                     // Get url
                     var url = ed.dom.getAttrib(ed.selection.getNode(), 'alt');
                     url = url.replace(/@@/, '@@edit-tile/');
-
+                    url = new tinymce.util.URI(ed.settings.document_url).toAbsolute(url);
+                    
                     // Open add tile menu
                     ed.windowManager.open({
                         file : url,
@@ -35,7 +36,7 @@
 
                     // Open add tile menu
                     ed.windowManager.open({
-                        file : ed.settings.document_base_url + '/@@add-tile',
+                        file : ed.settings.document_url + '/@@add-tile',
                         width : 820,
                         height : 480,
                         inline : 1

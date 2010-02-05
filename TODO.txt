@@ -1,15 +1,13 @@
 collective.tinymcetiles ToDo
 =============================
 
-* Refactor persistent tile data storage and tile bookkeeping to delay
-  insertion until the form is actually saved
 * Clean up tile data upon removal
-
 * Write tests
 * Releases
     - repoze.xmliter
     - plone.transformchain
     - plone.tiles
     - plone.app.tiles
+    - plone.app.drafts
     - plone.app.blocks
     - collective.tinymcetiles
