@@ -6,7 +6,10 @@
     
     <include package="plone.app.tiles" />
     
-    <!-- Transformation - order 8950, which is late in the XML processing cycle that runs from 8000 -->
+    <!-- Transformation - order 8850, which is late in the XML processing
+         cycle that runs from 8000, but before the ESI rendering step at
+         8900 
+         -->
     <adapter
         for="* .interfaces.ITinyMCETilesLayer"
         name="collective.tinymcetiles.interpolate"

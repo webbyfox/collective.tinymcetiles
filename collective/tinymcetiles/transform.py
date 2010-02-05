@@ -1,18 +1,19 @@
-import copy
 import logging
 from urlparse import urljoin
-from lxml import etree, html
 
 from repoze.xmliter.serializer import XMLSerializer
 
 from zope.interface import implements
-from plone.transformchain.interfaces import ITransform
-from plone.tiles.interfaces import IESIRendered
-from plone.app.blocks.utils import cloneRequest, traverse, invoke, extractCharset
+from zope.component import queryUtility
 
-from AccessControl import Unauthorized
+from plone.registry.interfaces import IRegistry
+
+from plone.transformchain.interfaces import ITransform
+
+from plone.app.blocks.interfaces import IBlocksSettings
+from plone.app.blocks import utils
+
 from ZODB.POSException import ConflictError
-from zExceptions import NotFound
 
 log = logging.getLogger('collective.tinymcetiles')
 
@@ -22,7 +23,7 @@ class InterpolateTiles(object):
     
     implements(ITransform)
     
-    order = 8950
+    order = 8850
     
     def __init__(self, published, request):
         self.published = published
@@ -47,13 +48,6 @@ class InterpolateTiles(object):
         # Set a marker in the request to let subsequent steps know the merging has happened
         self.request['collective.tinymcetiles.merged'] = True
         
-        # We may need to do some string post-processing unforunately, because
-        # the ESI tag won't self-close properly in HTML rendering mode.
-        
-        if self.request.get('collective.tinymcetiles.esi', False):
-            consumed = u"".join(result).replace(u"></esi:include>", u'/>')
-            result = consumed
-        
         return result
 
 def resolveTiles(request, tree):
@@ -61,8 +55,15 @@ def resolveTiles(request, tree):
     placehodlers and resolve them to actual tiles.
     """
     
-    esiUsed = False
-    nsmap = {'esi': 'http://www.edge-delivery.org/esi/1.0'}
+    renderView = None
+    renderedRequestKey = None
+    
+    # Optionally enable ESI rendering
+    registry = queryUtility(IRegistry)
+    if registry is not None:
+        if registry.forInterface(IBlocksSettings).esi:
+            renderView = 'plone.app.blocks.esirenderer'
+            renderedRequestKey = 'plone.app.blocks.esi'
     
     baseURL = request.getURL()
     
@@ -77,67 +78,26 @@ def resolveTiles(request, tree):
             # Get the tile URL, which is in the alt attribute
             tileHref = tilePlaceholderNode.get('alt', None)
             
-            if tileHref is not None:
+            if tileHref:
                 
                 tileHref = urljoin(baseURL, tileHref)
+                tileTree = utils.resolve(request, tileHref, renderView, renderedRequestKey)
                 
-                requestClone = cloneRequest(request, tileHref)
-                path = '/'.join(requestClone.physicalPathFromURL(tileHref.split('?')[0]))
-                
-                esi = False
-                resolved = None
-                
-                try:
-                    traversed = traverse(requestClone, path)
-                    if IESIRendered.providedBy(traversed):
-                        esi = True
-                    else:
-                        resolved = invoke(requestClone, traversed)
-                except (NotFound, Unauthorized,):
-                    log.exception("Could not resolve tile with URL %s" % tileHref)
-                    requestClone.close()
-                    raise
-                
-                charset = extractCharset(requestClone.response)
-                requestClone.close()
-                
-                if esi:
-                    esiNode = etree.Element("{%s}include" % nsmap['esi'], nsmap=nsmap)
+                if tileTree is not None:
                     
-                    if '?' in tileHref:
-                        tileURL, tileQueryString = tileHref.split('?')
-                        esiNode.set('src', "%s/@@esi-body?%s" % (tileURL, tileQueryString,))
-                    else:
-                        esiNode.set('src', "%s/@@esi-body" % tileHref)
-                    tilePlaceholderNode.getparent().replace(tilePlaceholderNode, esiNode)
-                    esiUsed = request['collective.tinymcetiles.esi'] = True
-                elif resolved is not None:
+                    # merge tile head into the page's head
+                    tileHead = tileTree.find('head')
+                    if tileHead is not None:
+                        for tileHeadChild in tileHead:
+                            headNode.append(tileHeadChild)
                     
-                    # Parse the tile HTML and merge it into the page
-                    parser = html.HTMLParser()
+                    # insert tile target with tile body
+                    tileBody = tileTree.find('body')
+                    if tileBody is not None:
+                        for tileBodyChild in tileBody:
+                            tilePlaceholderNode.addnext(tileBodyChild)
                     
-                    if isinstance(resolved, unicode):
-                        parser.feed(resolved)
-                    elif isinstance(resolved, str):
-                        parser.feed(resolved.decode(charset))
-                    
-                    tileRoot = parser.close()
-                    
-                    if tileRoot is not None:
-                        
-                        # merge tile head into the page's head
-                        tileHead = tileRoot.find('head')
-                        if tileHead is not None:
-                            for tileHeadChild in tileHead:
-                                headNode.append(tileHeadChild)
-                        
-                        # insert tile target with tile body
-                        tileBody = tileRoot.find('body')
-                        if tileBody is not None:
-                            for tileBodyChild in tileBody:
-                                tilePlaceholderNode.addnext(tileBodyChild)
-                        
-                        tilePlaceholderNode.getparent().remove(tilePlaceholderNode)
+                    tilePlaceholderNode.getparent().remove(tilePlaceholderNode)
                 else:
                     log.error("Could not render tile at %s", tileHref)
 
@@ -147,14 +107,4 @@ def resolveTiles(request, tree):
             log.exception("Could not render tile at %s", tileHref)
             continue
     
-    if esiUsed:
-        # Add the xmlns:esi to the root
-        newRoot = etree.XML('%s\n<html %s/>' % (tree.docinfo.doctype,
-                " ".join(['xmlns:%s="%s"' % (k,v) for k,v in nsmap.items()]),
-            ))
-        newRoot.attrib.update(root.attrib.items())
-        newRoot[:] = copy.deepcopy(root)[:]
-        tree._setroot(newRoot)
-        
-        
     return tree
