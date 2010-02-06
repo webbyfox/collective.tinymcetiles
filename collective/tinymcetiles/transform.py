@@ -1,6 +1,7 @@
 import logging
 from urlparse import urljoin
 
+from lxml.html import builder as E
 from repoze.xmliter.serializer import XMLSerializer
 
 from zope.interface import implements
@@ -94,10 +95,19 @@ def resolveTiles(request, tree):
                     # insert tile target with tile body
                     tileBody = tileTree.find('body')
                     if tileBody is not None:
+                        
+                        # Preserve text
+                        if tileBody.text:
+                            tileTextSpan = E.SPAN()
+                            tileTextSpan.text = tileBody.text
+                            tilePlaceholderNode.addnext(tileTextSpan)
+                        
+                        # Copy other nodes
                         for tileBodyChild in tileBody:
                             tilePlaceholderNode.addnext(tileBodyChild)
                     
                     tilePlaceholderNode.getparent().remove(tilePlaceholderNode)
+                    
                 else:
                     log.error("Could not render tile at %s", tileHref)
 

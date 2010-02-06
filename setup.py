@@ -27,6 +27,9 @@ setup(name='collective.tinymcetiles',
           'plone.app.blocks',
           'Products.TinyMCE',
       ],
+      extras_require={
+        'test': ['collective.testcaselayer',],
+      },
       entry_points="""
       [z3c.autoinclude.plugin]
       target = plone

@@ -6,8 +6,10 @@ that allows authors to insert *tiles* into the page. Tiles may be
 configured prior to insertion, and edited thereafter, using a new toolbar
 button in Plone's TinyMCE editor.
 
-On the edit screen, the tile is shown as a placeholder image. When the page
-is rendered, this placeholder will be replaced by the rendered tile.
+On the edit screen, a tile is shown as a placeholder image. When the page
+is rendered, this placeholder will be replaced by the rendered tile. If
+there is an error rendering the tile, the placeholder image will remain,
+and an exception will be recorded in the Zope error log.
 
 Installation
 ============
