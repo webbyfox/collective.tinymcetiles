@@ -73,8 +73,8 @@
                 if (curtiles.indexOf(this._tiles[i]) == -1) {
 
                     // Get delete url
-                    var url = this._tiles[i].replace(/@@/, '@@delete-tile/');
-                    url = new tinymce.util.URI(ed.settings.document_url).toAbsolute(url);
+                    var url = this._tiles[i].split('@@')[1].split('/');
+                    url = new tinymce.util.URI(ed.settings.document_url).toAbsolute('./@@delete-tile?type=' + url[0] + '&id=' + url[1] + '&confirm=true');
 
                     // Do ajax call
                     tinymce.util.XHR.send({
