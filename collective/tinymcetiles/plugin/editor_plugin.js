@@ -6,12 +6,12 @@
 
 (function() {
     tinymce.create('tinymce.plugins.PloneTilesPlugin', {
+        _tiles : [],
         init : function(ed, url) {
 
             // Register css
             tinymce.DOM.loadCSS(url + '/++resource++collective.tinymcetiles.plugin/content.css');
 
-            
             // Register commands
             ed.addCommand('mcePloneTiles', function() {
                 // Internal image object like a flash placeholder
@@ -51,6 +51,38 @@
                 title : 'Tiles',
                 cmd : 'mcePloneTiles'
             });
+
+            ed.onChange.add(this._change, this);
+            ed.onInit.add(this._init, this);
+        },
+
+        _init : function(ed) {
+            var curtiles = ed.dom.select('.mceTile');
+            for (var i = 0; i < curtiles.length; i++) {
+                this._tiles.push(ed.dom.getAttrib(curtiles[i], 'alt'));
+            }
+        },
+
+        _change : function(ed, l) {
+            var curtilesdom = ed.dom.select('.mceTile');
+            var curtiles = [];
+            for (var i = 0; i < curtilesdom.length; i++) {
+                curtiles.push(ed.dom.getAttrib(curtilesdom[i], 'alt'));
+            }
+            for (var i = 0; i < this._tiles.length; i++) {
+                if (curtiles.indexOf(this._tiles[i]) == -1) {
+
+                    // Get delete url
+                    var url = this._tiles[i].replace(/@@/, '@@delete-tile/');
+                    url = new tinymce.util.URI(ed.settings.document_url).toAbsolute(url);
+
+                    // Do ajax call
+                    tinymce.util.XHR.send({
+                        url : url
+                    });
+                }
+            }
+            this._tiles = curtiles;
         },
 
         getInfo : function() {
