@@ -8,4 +8,11 @@
               id="++resource++collective.tinymcetiles.plugin/event.js"
               inline="False"/>
 
+      <javascript cacheable="True"
+              compression="none"
+              cookable="False"
+              enabled="True"
+              id="++resource++collective.tinymcetiles.plugin/editor_plugin.js"
+              inline="False"/>
+
 </object>
