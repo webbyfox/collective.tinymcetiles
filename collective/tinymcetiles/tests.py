@@ -1,8 +1,9 @@
-import unittest
-import collective.testcaselayer.ptc
-
-from Products.PloneTestCase import ptc
-from Products.Five import zcml
+import unittest2 as unittest
+from plone.app.testing import PLONE_FIXTURE
+from plone.app.testing import PloneSandboxLayer
+from plone.app.testing import IntegrationTesting
+from plone.app.testing import applyProfile
+from zope.configuration import xmlconfig
 
 import collective.tinymcetiles
 
@@ -23,12 +24,27 @@ class DummyTile(Tile):
 </html>
 """
 
-class IntegrationTestLayer(collective.testcaselayer.ptc.BasePTCLayer):
 
-    def afterSetUp(self):
-        zcml.load_config('configure.zcml', collective.tinymcetiles)
-        zcml.load_string("""\
+class TilesLayer(PloneSandboxLayer):
+
+    defaultBases = (PLONE_FIXTURE, )
+
+    def setUpZope(self, app, configurationContext):
+        # Load ZCML for this package
+        import plone.tiles
+#        xmlconfig.file('meta.zcml', plone.tiles,
+#                       context=configurationContext)
+#        import collective.tinymcetiles
+#        xmlconfig.file('configure.zcml', collective.tinymcetiles,
+#                       context=configurationContext)
+        xmlconfig.string("""\
 <configure package="collective.tinymcetiles" xmlns="http://namespaces.plone.org/plone">
+    <include package="zope.component" file="meta.zcml" />
+    <include package="zope.security" file="meta.zcml" />
+    <include package="zope.app.publisher" file="meta.zcml" />
+    <include package="zope.i18n" file="meta.zcml" />
+    <include package="Products.Five" file="meta.zcml" />
+    <include package="collective.tinymcetiles"  />
     <tile
         name="collective.tinymcetiles.tests.DummyTile"
         title="Dummy tile"
@@ -38,13 +54,18 @@ class IntegrationTestLayer(collective.testcaselayer.ptc.BasePTCLayer):
         />
 </configure>
 """)
-        self.addProfile('collective.tinymcetiles:default')
 
-Layer = IntegrationTestLayer([collective.testcaselayer.ptc.ptc_layer])
+    def setUpPloneSite(self, portal):
+        applyProfile(portal, 'collective.tinymcetiles:default')
 
-class IntegrationTestCase(ptc.FunctionalTestCase):
+FIXTURE = TilesLayer()
+INTEGRATION_TESTING = \
+    IntegrationTesting(bases=(FIXTURE, ),
+                       name="CollectiveTinyMCETiles:Integration")
+
+class IntegrationTestCase(unittest.TestCase):
     
-    layer = Layer
+    layer = INTEGRATION_TESTING
     
     def test_dependencies_installed(self):
         qi = getToolByName(self.portal, 'portal_quickinstaller')

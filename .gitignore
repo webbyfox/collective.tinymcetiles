@@ -1,0 +1,11 @@
+parts
+.installed.cfg
+*.egg-info
+*.pyc
+var
+include
+lib
+bin
+.DS_Store
+develop-eggs
+.idea
