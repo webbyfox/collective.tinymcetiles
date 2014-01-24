@@ -39,10 +39,10 @@ When I insert a "DummyTile" in a document
 #    Select Frame  pools_to_register_iframe
   element should be visible  css=.mceLayout .mceToolbar
   Click link  css=.mce_plonetiles
-  select frame  css=.plonepopup iframe
   page should contain  Dummy tile
-  page should contain  blah
-  select checkbox  css=#form-field-dummy-tile
+  select frame  css=.plonepopup iframe
+  element should be visible  css=form#add-tile
+  with the label  Dummy tile  select checkbox
   click button  Create
   click button  Save
 
@@ -52,8 +52,12 @@ When I insert a "DummyTile" in a document
 A visitor can view "dummy"
   Log out
   Go to  ${PLONE_URL}/a-document
-  Page should contain  dummy
+  Page should contain  Test tile rendered
 
 
 
 
+With the label
+    [arguments]     ${title}   ${extra_keyword}   @{list}
+    ${for}=  Get Element Attribute  xpath=//label[contains(., "${title}")]@for
+    Run Keyword     ${extra_keyword}  id=${for}   @{list}

@@ -46,7 +46,7 @@ class IntegrationTestCase(unittest.TestCase):
 <p>
     <img
         src="/++resource++collective.tinymcetiles.plugin/placeholder.gif"
-        alt="./@@collective.tinymcetiles.tests.DummyTile/tile-1"
+        alt="./@@dummy.tile/tile-1"
         class="mceItem mceTile"
         />
 </p>
