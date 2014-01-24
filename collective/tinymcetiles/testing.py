@@ -2,14 +2,14 @@ from plone.app.robotframework.testing import REMOTE_LIBRARY_BUNDLE_FIXTURE
 from plone.app.testing import IntegrationTesting, FunctionalTesting
 from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import PloneSandboxLayer
-from plone.app.testing import IntegrationTesting
 from plone.app.testing import applyProfile
-from plone.testing import z2
 from plone.testing.z2 import ZSERVER_FIXTURE
 from plone.tiles import Tile
 from zope.configuration import xmlconfig
 
 import collective.tinymcetiles
+from zope.component import getUtility
+from plone.registry.interfaces import IRegistry
 
 
 class DummyTile(Tile):
@@ -29,28 +29,42 @@ class TilesLayer(PloneSandboxLayer):
     def setUpZope(self, app, configurationContext):
         # Load ZCML for this package
         import plone.tiles
-#        xmlconfig.file('meta.zcml', plone.tiles,
-#                       context=configurationContext)
         import collective.tinymcetiles
         xmlconfig.file('configure.zcml', collective.tinymcetiles,
                        context=configurationContext)
         xmlconfig.string("""\
 <configure package="collective.tinymcetiles" xmlns="http://namespaces.plone.org/plone">
     <tile
-        name="collective.tinymcetiles.tests.DummyTile"
+        name="dummy.tile"
         title="Dummy tile"
+        description="dummy"
         add_permission="cmf.ModifyPortalContent"
         class=".testing.DummyTile"
         permission="zope2.View"
+        for="*"
         />
 </configure>
 """, context=configurationContext)
 
     def setUpPloneSite(self, portal):
         applyProfile(portal, 'collective.tinymcetiles:default')
+#        applyProfile(portal, 'plone.app.texttile:default')
+        registry = getUtility(IRegistry)
+        registry["plone.app.tiles"].append('dummy.tile')
 
 
+"""
+<?xml version="1.0"?>
+<registry>
 
+    <record name="plone.app.tiles">
+        <value purge="false">
+            <element>plone.app.texttile</element>
+        </value>
+    </record>
+
+</registry>
+"""
 
 TILES_FIXTURE = TilesLayer()
 
@@ -61,10 +75,11 @@ TILES_FUNCTIONAL_TESTING = FunctionalTesting(\
     bases=(TILES_FIXTURE,),
     name="collective.tinymcetiles:Functional")
 
-TILES_ROBOT_TESTING = z2.FunctionalTesting(
+TILES_ROBOT_TESTING = FunctionalTesting(
     bases=(TILES_FIXTURE,
            REMOTE_LIBRARY_BUNDLE_FIXTURE,
-           ZSERVER_FIXTURE),
+           ZSERVER_FIXTURE
+    ),
     name='collective.tinymcetiles:Robot')
 
 

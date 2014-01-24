@@ -40,8 +40,11 @@ When I insert a "DummyTile" in a document
   element should be visible  css=.mceLayout .mceToolbar
   Click link  css=.mce_plonetiles
   select frame  css=.plonepopup iframe
-  select checkbox  css=#form-field-plone-app-texttile
-  page should contain  dummy tile
+  page should contain  Dummy tile
+  page should contain  blah
+  select checkbox  css=#form-field-dummy-tile
+  click button  Create
+  click button  Save
 
 
 # Then
