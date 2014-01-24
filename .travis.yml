@@ -17,6 +17,9 @@ matrix:
 before_install:
   - pip install http://effbot.org/downloads/Imaging-1.1.6.tar.gz
   - sudo apt-get install -qq libxml2-dev libxslt-dev
+before_script:
+- export DISPLAY=:99.0
+- sh -e /etc/init.d/xvfb start
 install:
   - python bootstrap.py -c travis-$PLONE.cfg
   - bin/buildout -t 3 -c travis-$PLONE.cfg -q
