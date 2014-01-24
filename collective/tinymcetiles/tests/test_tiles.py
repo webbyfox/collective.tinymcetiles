@@ -8,18 +8,8 @@ from plone.tiles.tile import Tile
 
 from Products.CMFCore.utils import getToolByName
 from Products.TinyMCE.interfaces.utility import ITinyMCE
-from testing import TILES_FUNCTIONAL_TESTING, TILES_INTEGRATION_TESTING
+from collective.tinymcetiles.testing import TILES_FUNCTIONAL_TESTING, TILES_INTEGRATION_TESTING
 from plone.testing.z2 import Browser
-
-
-class DummyTile(Tile):
-    
-    def __call__(self):
-        return u"""\
-<html>
-<body>Test tile rendered<p>With child tags</p>And tail text</body>
-</html>
-"""
 
 
 class IntegrationTestCase(unittest.TestCase):

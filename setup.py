@@ -28,7 +28,7 @@ setup(name='collective.tinymcetiles',
           'Products.TinyMCE',
       ],
       extras_require={
-        'test': ['plone.app.testing'],
+        'test': ['plone.app.testing', 'plone.app.robotframework>=0.7.0rc4'],
       },
       entry_points="""
       [z3c.autoinclude.plugin]
