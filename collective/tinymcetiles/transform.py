@@ -82,7 +82,7 @@ def resolveTiles(request, tree):
             if tileHref:
                 
                 tileHref = urljoin(baseURL, tileHref)
-                tileTree = utils.resolve(request, tileHref, renderView, renderedRequestKey)
+                tileTree = utils.resolve(tileHref)
                 
                 if tileTree is not None:
                     
