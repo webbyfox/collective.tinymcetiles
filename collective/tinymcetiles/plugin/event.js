@@ -5,6 +5,10 @@
 
         // Check if tiledata is available and valid
         if (typeof(tiledata) !== 'undefined') {
+            // tiledata is added by plone.app.tiles.browser.add
+            // 1. popup created by editor_plugin.js with iframe to @@add-tile
+            // 2. each page load of that iframe executes this code
+            // 3. final page is @@add-tile/TILEID which has tiledata object
 
             // Get object
             var w =  window.dialogArguments || opener || parent || top;

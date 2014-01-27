@@ -44,15 +44,18 @@ When I insert a "DummyTile" in a document
   element should be visible  css=form#add-tile
   with the label  Dummy tile  select checkbox
   click button  Create
+#  page should contain  img
+#  element should be visible css=img.mceTile
   click button  Save
 
 
 # Then
 
 A visitor can view "dummy"
-  Log out
-  Go to  ${PLONE_URL}/a-document
-  Page should contain  Test tile rendered
+  wait until page contains  dummy
+#  Log out
+#  Go to  ${PLONE_URL}/a-document
+#  Page should contain  Test tile rendered
 
 
 
