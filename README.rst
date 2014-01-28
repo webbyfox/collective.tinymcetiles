@@ -1,3 +1,9 @@
+.. contents::
+
+.. image:: https://secure.travis-ci.org/collective/collective.tinymcetiles.png
+    :target: http://travis-ci.org/collective/collective.tinymcetiles
+
+
 Introduction
 ============
 
