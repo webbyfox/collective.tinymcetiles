@@ -6,14 +6,12 @@ from plone.app.testing import applyProfile
 from plone.testing.z2 import ZSERVER_FIXTURE
 from plone.tiles import Tile
 from zope.configuration import xmlconfig
-
-import collective.tinymcetiles
 from zope.component import getUtility
 from plone.registry.interfaces import IRegistry
+import collective.tinymcetiles
 
 
 class DummyTile(Tile):
-
     def __call__(self):
         return u"""\
 <html>
@@ -23,13 +21,11 @@ class DummyTile(Tile):
 
 
 class TilesLayer(PloneSandboxLayer):
-
     defaultBases = (PLONE_FIXTURE, )
 
     def setUpZope(self, app, configurationContext):
         # Load ZCML for this package
-        import plone.tiles
-        import collective.tinymcetiles
+
         xmlconfig.file('configure.zcml', collective.tinymcetiles,
                        context=configurationContext)
         xmlconfig.string("""\
@@ -48,7 +44,7 @@ class TilesLayer(PloneSandboxLayer):
 
     def setUpPloneSite(self, portal):
         applyProfile(portal, 'collective.tinymcetiles:default')
-#        applyProfile(portal, 'plone.app.texttile:default')
+        #        applyProfile(portal, 'plone.app.texttile:default')
         registry = getUtility(IRegistry)
         registry["plone.app.tiles"].append('dummy.tile')
 
@@ -68,21 +64,17 @@ class TilesLayer(PloneSandboxLayer):
 
 TILES_FIXTURE = TilesLayer()
 
-TILES_INTEGRATION_TESTING = IntegrationTesting(\
+TILES_INTEGRATION_TESTING = IntegrationTesting(
     bases=(TILES_FIXTURE,),
     name="collective.tinymcetiles:Integration")
-TILES_FUNCTIONAL_TESTING = FunctionalTesting(\
+TILES_FUNCTIONAL_TESTING = FunctionalTesting(
     bases=(TILES_FIXTURE,),
     name="collective.tinymcetiles:Functional")
 
 TILES_ROBOT_TESTING = FunctionalTesting(
     bases=(TILES_FIXTURE,
            REMOTE_LIBRARY_BUNDLE_FIXTURE,
-           ZSERVER_FIXTURE
-    ),
+           ZSERVER_FIXTURE),
     name='collective.tinymcetiles:Robot')
 
 ROBOT_TESTING = TILES_ROBOT_TESTING
-
-#optionflags = (doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE)
-

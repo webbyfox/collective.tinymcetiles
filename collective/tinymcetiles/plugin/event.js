@@ -1,4 +1,5 @@
-;(function($) {
+;
+(function ($) {
 
     // Init on load
     $(window).load(function () {
@@ -11,7 +12,7 @@
             // 3. final page is @@add-tile/TILEID which has tiledata object
 
             // Get object
-            var w =  window.dialogArguments || opener || parent || top;
+            var w = window.dialogArguments || opener || parent || top;
             tinymce = w.tinymce;
             editor = tinymce.EditorManager.activeEditor;
 
@@ -28,10 +29,10 @@
 
                     // Insert content
                     editor.execCommand('mceInsertContent', false, editor.dom.createHTML('img', {
-                        src : '/++resource++collective.tinymcetiles.plugin/placeholder.gif',
-                        alt : tiledata.url,
-                        class : 'mceItem mceTile',
-                        border : 0
+                        src: '/++resource++collective.tinymcetiles.plugin/placeholder.gif',
+                        alt: tiledata.url,
+                        class: 'mceItem mceTile',
+                        border: 0
                     }));
 
                     // Close popup
