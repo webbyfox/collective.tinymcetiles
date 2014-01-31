@@ -1,28 +1,28 @@
 <configure
-    xmlns="http://namespaces.zope.org/zope"
-    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
-    xmlns:browser="http://namespaces.zope.org/browser"
-    xmlns:zcml="http://namespaces.zope.org/zcml"
-    i18n_domain="collective.tinymcetiles">
-    
-    <include package="Products.GenericSetup" file="meta.zcml" />
-    <include package="plone.app.blocks" />
-    <include package="plone.app.tiles" />
+        xmlns="http://namespaces.zope.org/zope"
+        xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+        xmlns:browser="http://namespaces.zope.org/browser"
+        xmlns:zcml="http://namespaces.zope.org/zcml"
+        i18n_domain="collective.tinymcetiles">
+
+    <include package="Products.GenericSetup" file="meta.zcml"/>
+    <include package="plone.app.blocks"/>
+    <include package="plone.app.tiles"/>
 
     <configure zcml:condition="not-installed plone.app.deco">
         <!-- redefine since we don't want to rely on deco -->
         <permission
-            id="plone.ModifyDecoLayout"
-            title="Plone: Modify Deco Layout" />
+                id="plone.ModifyDecoLayout"
+                title="Plone: Modify Deco Layout"/>
         <permission
-            id="plone.ChangeDecoLayout"
-            title="Plone: Change Deco Layout" />
+                id="plone.ChangeDecoLayout"
+                title="Plone: Change Deco Layout"/>
         <!--permission
             id="plone.ModifyTiles"
             title="Plone: Modify Tiles" /-->
         <permission
-            id="plone.ManageDeco"
-            title="Plone: Manage Deco" />
+                id="plone.ManageDeco"
+                title="Plone: Manage Deco"/>
     </configure>
 
     <!-- Transformation - order 8850, which is late in the XML processing
@@ -30,22 +30,22 @@
          8900 
          -->
     <adapter
-        for="* .interfaces.ITinyMCETilesLayer"
-        name="collective.tinymcetiles.interpolate"
-        factory=".transform.InterpolateTiles"
-        />
-    
+            for="* .interfaces.ITinyMCETilesLayer"
+            name="collective.tinymcetiles.interpolate"
+            factory=".transform.InterpolateTiles"
+            />
+
     <browser:resourceDirectory
-        name="collective.tinymcetiles.plugin"
-        directory="plugin"
-        />
+            name="collective.tinymcetiles.plugin"
+            directory="plugin"
+            />
 
     <genericsetup:registerProfile
-        name="default"
-        title="TinyMCE Tiles Support"
-        directory="profiles/default"
-        description="Adds tiles support to TinyMCE."
-        provides="Products.GenericSetup.interfaces.EXTENSION"
-        />
+            name="default"
+            title="TinyMCE Tiles Support"
+            directory="profiles/default"
+            description="Adds tiles support to TinyMCE."
+            provides="Products.GenericSetup.interfaces.EXTENSION"
+            />
 
 </configure>
