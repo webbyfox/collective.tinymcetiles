@@ -41,6 +41,7 @@ When I insert a "DummyTile" in a document
   Click link  css=.mce_plonetiles
   page should contain  Dummy tile
   select frame  css=.plonepopup iframe
+  page should contain  sblah
   element should be visible  css=form#add-tile
   with the label  Dummy tile  select checkbox
   click button  Create
