@@ -82,6 +82,7 @@ TILES_ROBOT_TESTING = FunctionalTesting(
     ),
     name='collective.tinymcetiles:Robot')
 
+ROBOT_TESTING = TILES_ROBOT_TESTING
 
 #optionflags = (doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE)
 
